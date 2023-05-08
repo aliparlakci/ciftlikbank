@@ -1,13 +1,13 @@
-package com.parlakci.karadelikbank;
+package com.parlakci.ciftlikbank;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KaradelikBankApplication {
+public class CiftlikbankApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(KaradelikBankApplication.class, args);
+		SpringApplication.run(CiftlikbankApplication.class, args);
 	}
 
 }
