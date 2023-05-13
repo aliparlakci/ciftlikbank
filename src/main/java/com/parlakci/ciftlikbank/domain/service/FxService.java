@@ -20,6 +20,6 @@ public class FxService {
 
     public TicketVo requestTicket() {
         // TODO implement
-        return TicketVo.builder().build();
+        return null;
     }
 }
