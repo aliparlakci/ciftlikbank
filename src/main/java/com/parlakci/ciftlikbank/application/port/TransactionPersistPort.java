@@ -11,5 +11,5 @@ public interface TransactionPersistPort {
 
     Transaction retrieveLatestAccountTransaction(String accountUid);
     List<Transaction> retrieveTransactions(String accountUid, ZonedDateTime startDate);
-    void create(String accountUid, BigDecimal amount, TransactionType transactionType);
+    void create(String accountUid, BigDecimal amount);
 }

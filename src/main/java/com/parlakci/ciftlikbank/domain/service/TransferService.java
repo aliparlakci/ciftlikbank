@@ -2,7 +2,6 @@ package com.parlakci.ciftlikbank.domain.service;
 
 import com.parlakci.ciftlikbank.application.port.TransactionPersistPort;
 import com.parlakci.ciftlikbank.domain.exception.BusinessException;
-import com.parlakci.ciftlikbank.domain.model.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,10 @@ public class TransferService {
     public void deposit(String accountUid, BigDecimal amount) {
         // TODO locks
         // TODO invalidate cache
-        transactionPersistPort.create(accountUid, amount, TransactionType.TRANSFER);
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new BusinessException("Withdraw amount cannot be negative!");
+        }
+        transactionPersistPort.create(accountUid, amount);
     }
 
     public void withdraw(String accountUid, BigDecimal amount) {
@@ -32,6 +34,6 @@ public class TransferService {
         if (accountBalance.compareTo(amount) < 0) {
             throw new BusinessException("Insufficient funds!");
         }
-        transactionPersistPort.create(accountUid, amount, TransactionType.TRANSFER);
+        transactionPersistPort.create(accountUid, amount.negate());
     }
 }

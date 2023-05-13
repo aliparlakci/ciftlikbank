@@ -4,7 +4,7 @@ import com.parlakci.ciftlikbank.domain.model.AccountSnapshot;
 
 import java.math.BigDecimal;
 
-public interface AccountSnapshotPersistencePort {
+public interface AccountSnapshotPersistPort {
     AccountSnapshot retrieveLatest(String accountUid);
 
     AccountSnapshot newSnapshot(String accountUid, BigDecimal net);

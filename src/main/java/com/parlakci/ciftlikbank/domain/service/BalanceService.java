@@ -1,10 +1,9 @@
 package com.parlakci.ciftlikbank.domain.service;
 
-import com.parlakci.ciftlikbank.application.port.AccountSnapshotPersistencePort;
+import com.parlakci.ciftlikbank.application.port.AccountSnapshotPersistPort;
 import com.parlakci.ciftlikbank.application.port.TransactionPersistPort;
 import com.parlakci.ciftlikbank.domain.model.AccountSnapshot;
 import com.parlakci.ciftlikbank.domain.model.Transaction;
-import com.parlakci.ciftlikbank.domain.model.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,12 @@ import java.util.List;
 public class BalanceService {
 
     private final TransactionPersistPort transactionPersistPort;
-    private final AccountSnapshotPersistencePort accountSnapshotPersistencePort;
+    private final AccountSnapshotPersistPort accountSnapshotPersistPort;
 
     @Transactional
     public BigDecimal retrieveAccountBalance(String accountUid) {
         // TODO caching
-        AccountSnapshot accountSnapshot = accountSnapshotPersistencePort.retrieveLatest(accountUid);
+        AccountSnapshot accountSnapshot = accountSnapshotPersistPort.retrieveLatest(accountUid);
         Transaction transaction = transactionPersistPort.retrieveLatestAccountTransaction(accountUid);
         // multiple threads creating redundant account snapshots?
         // we need caching and locking here
@@ -38,9 +37,9 @@ public class BalanceService {
     public AccountSnapshot takeAccountSnapshot(String accountUid, ZonedDateTime startDate) {
         // TODO too many db calls because we use uid
         List<Transaction> transactions = transactionPersistPort.retrieveTransactions(accountUid, startDate);
-        AccountSnapshot accountSnapshot = accountSnapshotPersistencePort.retrieveLatest(accountUid);
+        AccountSnapshot accountSnapshot = accountSnapshotPersistPort.retrieveLatest(accountUid);
         BigDecimal net = accountSnapshot.balance().add(calculateNetAsset(transactions));
-        return accountSnapshotPersistencePort.newSnapshot(accountUid, net);
+        return accountSnapshotPersistPort.newSnapshot(accountUid, net);
     }
 
     private static BigDecimal calculateNetAsset(List<Transaction> transactions) {
