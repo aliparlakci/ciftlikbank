@@ -11,5 +11,5 @@ public class AccountRequest {
     String email;
 
     @NonNull
-    int currency;
+    Integer currency;
 }

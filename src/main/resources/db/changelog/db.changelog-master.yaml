@@ -1,6 +1,6 @@
 databaseChangeLog:
   - preConditions:
-    dbms: postgresql
+      - dbms: postgresql
   - changeSet:
       id: ciftlikbank-1.0.0
       author: ali.parlakci
