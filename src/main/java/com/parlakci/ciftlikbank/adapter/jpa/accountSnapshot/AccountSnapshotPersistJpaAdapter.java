@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class AccountSnapshotPersistJpaAdapter implements AccountSnapshotPersistPort {
     @Override
-    public AccountSnapshot retrieveLatest(String accountUid) {
+    public AccountSnapshot retrieveLatestAccountSnapshot(String accountUid) {
         return null;
     }
 

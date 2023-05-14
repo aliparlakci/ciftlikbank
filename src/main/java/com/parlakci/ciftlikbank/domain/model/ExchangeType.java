@@ -1,12 +1,13 @@
 package com.parlakci.ciftlikbank.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public enum FxType {
-    USD_TRY("USD_TRY"), TRY_USD("TRY_USD");
+@AllArgsConstructor
+public enum ExchangeType {
+    SELL_USD("SELL_USD"), BUY_USD("BUY_USD");
 
     private final String value;
 }

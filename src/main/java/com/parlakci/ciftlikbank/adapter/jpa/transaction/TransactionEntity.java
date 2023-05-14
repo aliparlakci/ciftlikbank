@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(schema = "transaction")
+@Table(name = "transaction")
 public class TransactionEntity extends EntityBase {
 
     @Column(name = "uid", nullable = false)

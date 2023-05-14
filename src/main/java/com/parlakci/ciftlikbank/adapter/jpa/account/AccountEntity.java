@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(schema = "account")
+@Table(name = "account")
 public class AccountEntity extends EntityBase {
 
     @Column(name = "uid", nullable = false)

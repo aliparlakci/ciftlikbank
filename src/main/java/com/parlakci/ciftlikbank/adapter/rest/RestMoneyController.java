@@ -1,15 +1,15 @@
 package com.parlakci.ciftlikbank.adapter.rest;
 
 import com.parlakci.ciftlikbank.adapter.rest.request.DepositRequest;
-import com.parlakci.ciftlikbank.adapter.rest.request.FxRequest;
+import com.parlakci.ciftlikbank.adapter.rest.request.ExchangeRequest;
 import com.parlakci.ciftlikbank.adapter.rest.request.WithdrawRequest;
 import com.parlakci.ciftlikbank.adapter.rest.response.AccountResponse;
 import com.parlakci.ciftlikbank.adapter.rest.response.TicketResponse;
 import com.parlakci.ciftlikbank.application.facade.AccountRetrieveFacade;
-import com.parlakci.ciftlikbank.domain.model.vo.FxVo;
+import com.parlakci.ciftlikbank.domain.model.vo.ExchangeVo;
 import com.parlakci.ciftlikbank.domain.model.vo.TicketVo;
-import com.parlakci.ciftlikbank.domain.service.FxService;
-import com.parlakci.ciftlikbank.domain.service.TransferService;
+import com.parlakci.ciftlikbank.application.service.BalanceService;
+import com.parlakci.ciftlikbank.application.service.ExchangeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,33 +19,40 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RestMoneyController {
 
-    private final TransferService transferService;
+    private final BalanceService balanceService;
     private final AccountRetrieveFacade accountRetrieveFacade;
-    private final FxService fxService;
+    private final ExchangeService exchangeService;
 
-    @PostMapping("/v1/fx")
-    public void fx(@RequestBody FxRequest fxRequest) {
-        fxService.fx(FxVo.from(fxRequest));
+    @PostMapping("/v1/buy-dollars")
+    public void buyDollars(@RequestBody ExchangeRequest exchangeRequest) {
+        ExchangeVo exchangeVo = ExchangeVo.from(exchangeRequest);
+        exchangeService.buyDollars(exchangeVo);
     }
 
-    @PostMapping("/v1/fx/ticket")
+    @PostMapping("/v1/sell-dollars")
+    public void sellDollars(@RequestBody ExchangeRequest exchangeRequest) {
+        ExchangeVo exchangeVo = ExchangeVo.from(exchangeRequest);
+        exchangeService.sellDollars(exchangeVo);
+    }
+
+    @PostMapping("/v1/exchange/ticket")
     public TicketResponse requestTicket() {
-        TicketVo ticketVo = fxService.requestTicket();
+        TicketVo ticketVo = exchangeService.requestTicket();
         return TicketResponse.from(ticketVo);
-    }
-
-    @PostMapping("/v1/accounts/{accountUid}/deposit")
-    public void deposit(@PathVariable String accountUid, @RequestBody DepositRequest depositRequest) {
-        transferService.deposit(accountUid, depositRequest.getAmount());
-    }
-
-    @PostMapping("/v1/accounts/{accountUid}/withdraw")
-    public void withdraw(@PathVariable String accountUid, @RequestBody WithdrawRequest withdrawRequest) {
-        transferService.withdraw(accountUid, withdrawRequest.getAmount());
     }
 
     @GetMapping("/v1/accounts/{accountUid}")
     public AccountResponse retrieveAccount(@PathVariable String accountUid) {
         return accountRetrieveFacade.retrieveAccount(accountUid);
+    }
+
+    @PostMapping("/v1/accounts/{accountUid}/deposit")
+    public void deposit(@PathVariable String accountUid, @RequestBody DepositRequest depositRequest) {
+        balanceService.deposit(accountUid, depositRequest.getAmount());
+    }
+
+    @PostMapping("/v1/accounts/{accountUid}/withdraw")
+    public void withdraw(@PathVariable String accountUid, @RequestBody WithdrawRequest withdrawRequest) {
+        balanceService.withdraw(accountUid, withdrawRequest.getAmount());
     }
 }

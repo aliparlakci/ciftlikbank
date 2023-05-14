@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(schema = "account_snapshot")
+@Table(name = "account_snapshot")
 public class AccountSnapshotEntity extends EntityBase {
 
     @ManyToOne

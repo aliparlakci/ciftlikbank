@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @RequiredArgsConstructor
-public class FxRequest {
+public class ExchangeRequest {
     String depositAccountUid;
     String withdrawAccountUid;
     BigDecimal amount;

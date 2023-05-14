@@ -30,4 +30,9 @@ public class TransactionPersistJpaAdapter implements TransactionPersistPort {
 
     }
 
+    @Override
+    public void create(String accountUid, BigDecimal amount, String referenceUid) {
+
+    }
+
 }
