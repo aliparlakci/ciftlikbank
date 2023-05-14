@@ -1,7 +1,7 @@
 package com.parlakci.ciftlikbank.application.port;
 
-import com.parlakci.ciftlikbank.domain.model.Exchange;
+import com.parlakci.ciftlikbank.domain.model.vo.ExchangeVo;
 
 public interface ExchangePersistPort {
-    void newExchange(Exchange exchange);
+    void create(ExchangeVo exchangeVo);
 }

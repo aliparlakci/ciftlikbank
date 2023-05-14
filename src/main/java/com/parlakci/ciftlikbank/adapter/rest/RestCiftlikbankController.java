@@ -6,12 +6,11 @@ import com.parlakci.ciftlikbank.adapter.rest.request.ExchangeRequest;
 import com.parlakci.ciftlikbank.adapter.rest.request.WithdrawRequest;
 import com.parlakci.ciftlikbank.adapter.rest.response.AccountResponse;
 import com.parlakci.ciftlikbank.adapter.rest.response.TicketResponse;
-import com.parlakci.ciftlikbank.application.service.AccountService;
-import com.parlakci.ciftlikbank.application.service.RateService;
+import com.parlakci.ciftlikbank.application.service.*;
+import com.parlakci.ciftlikbank.domain.model.Currency;
+import com.parlakci.ciftlikbank.domain.model.ExchangeType;
 import com.parlakci.ciftlikbank.domain.model.vo.ExchangeVo;
 import com.parlakci.ciftlikbank.domain.model.vo.TicketVo;
-import com.parlakci.ciftlikbank.application.service.BookkeepingService;
-import com.parlakci.ciftlikbank.application.service.ExchangeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RestCiftlikbankController {
 
-    private final BookkeepingService bookkeepingService;
     private final AccountService accountService;
     private final ExchangeService exchangeService;
     private final RateService rateService;
+    private final MoneyTransferService moneyTransferService;
 
     @PostMapping("/v1/accounts")
     public AccountResponse createAccount(@RequestBody AccountRequest accountRequest) {
@@ -38,24 +37,24 @@ public class RestCiftlikbankController {
 
     @PostMapping("/v1/accounts/{accountUid}/deposit")
     public void deposit(@PathVariable String accountUid, @RequestBody DepositRequest depositRequest) {
-        bookkeepingService.deposit(accountUid, depositRequest.getAmount());
+        moneyTransferService.deposit(accountUid, depositRequest.getAmount());
     }
 
     @PostMapping("/v1/accounts/{accountUid}/withdraw")
     public void withdraw(@PathVariable String accountUid, @RequestBody WithdrawRequest withdrawRequest) {
-        bookkeepingService.withdraw(accountUid, withdrawRequest.getAmount());
+        moneyTransferService.withdraw(accountUid, withdrawRequest.getAmount());
     }
 
     @PostMapping("/v1/buy-dollars")
     public void buyDollars(@RequestBody ExchangeRequest exchangeRequest) {
-        ExchangeVo exchangeVo = ExchangeVo.from(exchangeRequest);
-        exchangeService.buyDollars(exchangeVo);
+        ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.BUY_USD, exchangeRequest);
+        exchangeService.exchange(exchangeVo, Currency.TRY, Currency.USD);
     }
 
     @PostMapping("/v1/sell-dollars")
     public void sellDollars(@RequestBody ExchangeRequest exchangeRequest) {
-        ExchangeVo exchangeVo = ExchangeVo.from(exchangeRequest);
-        exchangeService.sellDollars(exchangeVo);
+        ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.SELL_USD, exchangeRequest);
+        exchangeService.exchange(exchangeVo, Currency.USD, Currency.TRY);
     }
 
     @PostMapping("/v1/exchange/ticket")
