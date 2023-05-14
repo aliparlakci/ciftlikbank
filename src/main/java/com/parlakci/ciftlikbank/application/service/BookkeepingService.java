@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BalanceService {
+public class BookkeepingService {
 
     private final TransactionPersistPort transactionPersistPort;
     private final AccountSnapshotPersistPort accountSnapshotPersistPort;

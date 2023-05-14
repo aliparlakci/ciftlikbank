@@ -15,6 +15,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TransactionPersistJpaAdapter implements TransactionPersistPort {
+
+    public void createZeroTransaction(String accountUid) {
+
+    }
+
+    ;
+
     @Override
     public Transaction retrieveLatestAccountTransaction(String accountUid) {
         return null;

@@ -1,3 +1,9 @@
 databaseChangeLog:
   - preConditions:
     dbms: postgresql
+  - changeSet:
+      id: ciftlikbank-1.0.0
+      author: ali.parlakci
+      changes:
+        - sqlFile:
+            path: classpath:db/changelog/sql/ciftlikbank-1.0.0.sql

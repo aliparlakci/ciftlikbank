@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface TransactionPersistPort {
 
+    void createZeroTransaction(String accountUid);
+
     Transaction retrieveLatestAccountTransaction(String accountUid);
 
     List<Transaction> retrieveTransactions(String accountUid, ZonedDateTime startDate);
