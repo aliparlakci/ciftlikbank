@@ -1,6 +1,7 @@
 package com.parlakci.ciftlikbank.application.service;
 
-import com.parlakci.ciftlikbank.application.port.TicketCachePort;
+import com.parlakci.ciftlikbank.application.port.RateService;
+import com.parlakci.ciftlikbank.application.port.TicketPersistPort;
 import com.parlakci.ciftlikbank.domain.model.vo.TicketVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,20 +13,21 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RateService {
+public class TicketService {
 
-    private final TicketCachePort ticketCachePort;
+    private final TicketPersistPort ticketPersistPort;
+    private final RateService rateService;
 
     public TicketVo requestTicket() {
         BigDecimal rate = requestNewRate();
         String ticket = UUID.randomUUID().toString();
-        ticketCachePort.saveTicket(ticket, rate);
+        ticketPersistPort.saveTicket(ticket, rate);
 
         return null;
     }
 
-    private static BigDecimal requestNewRate() {
-        // TODO implement
-        return new BigDecimal(0);
+    private BigDecimal requestNewRate() {
+        String usdTryRate = rateService.getRates().getConversionRates().getTRY();
+        return new BigDecimal(usdTryRate);
     }
 }

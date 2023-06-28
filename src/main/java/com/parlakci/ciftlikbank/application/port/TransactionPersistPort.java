@@ -17,4 +17,5 @@ public interface TransactionPersistPort {
     void create(String accountUid, BigDecimal amount);
 
     void create(String accountUid, BigDecimal amount, String referenceUid);
+
 }

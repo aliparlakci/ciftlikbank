@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.*;
 public class RestCiftlikbankController {
 
     private final AccountService accountService;
-    private final ExchangeService exchangeService;
-    private final RateService rateService;
-    private final MoneyTransferService moneyTransferService;
+    private final MoneyFacade moneyFacade;
+    private final TicketService ticketService;
 
     @PostMapping("/v1/accounts")
     public AccountResponse createAccount(@RequestBody AccountRequest accountRequest) {
@@ -37,29 +36,29 @@ public class RestCiftlikbankController {
 
     @PostMapping("/v1/accounts/{accountUid}/deposit")
     public void deposit(@PathVariable String accountUid, @RequestBody DepositRequest depositRequest) {
-        moneyTransferService.deposit(accountUid, depositRequest.getAmount());
+        moneyFacade.deposit(accountUid, depositRequest.getAmount());
     }
 
     @PostMapping("/v1/accounts/{accountUid}/withdraw")
     public void withdraw(@PathVariable String accountUid, @RequestBody WithdrawRequest withdrawRequest) {
-        moneyTransferService.withdraw(accountUid, withdrawRequest.getAmount());
+        moneyFacade.withdraw(accountUid, withdrawRequest.getAmount());
     }
 
     @PostMapping("/v1/buy-dollars")
     public void buyDollars(@RequestBody ExchangeRequest exchangeRequest) {
         ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.BUY_USD, exchangeRequest);
-        exchangeService.exchange(exchangeVo, Currency.TRY, Currency.USD);
+        moneyFacade.exchange(exchangeVo, Currency.TRY, Currency.USD);
     }
 
     @PostMapping("/v1/sell-dollars")
     public void sellDollars(@RequestBody ExchangeRequest exchangeRequest) {
         ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.SELL_USD, exchangeRequest);
-        exchangeService.exchange(exchangeVo, Currency.USD, Currency.TRY);
+        moneyFacade.exchange(exchangeVo, Currency.USD, Currency.TRY);
     }
 
     @PostMapping("/v1/exchange/ticket")
     public TicketResponse requestTicket() {
-        TicketVo ticketVo = rateService.requestTicket();
+        TicketVo ticketVo = ticketService.requestTicket();
         return TicketResponse.from(ticketVo);
     }
 }

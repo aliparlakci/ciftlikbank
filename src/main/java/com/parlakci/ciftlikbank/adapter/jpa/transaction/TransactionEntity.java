@@ -3,7 +3,6 @@ package com.parlakci.ciftlikbank.adapter.jpa.transaction;
 import com.parlakci.ciftlikbank.adapter.jpa.EntityBase;
 import com.parlakci.ciftlikbank.adapter.jpa.account.AccountEntity;
 import com.parlakci.ciftlikbank.domain.model.Transaction;
-import com.parlakci.ciftlikbank.domain.model.TransactionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +25,6 @@ public class TransactionEntity extends EntityBase {
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "transaction_type")
-    private TransactionType transactionType;
-
     @Column(name = "referenceUid")
     private String referenceUid;
 
@@ -38,7 +34,6 @@ public class TransactionEntity extends EntityBase {
                 this.getUid(),
                 this.getAmount(),
                 this.getAccount().toModel(),
-                this.getTransactionType(),
                 this.getReferenceUid(),
                 this.getCreatedAt(),
                 this.getUpdatedAt()

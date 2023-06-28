@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Builder
 public class AccountResponse {
+
     String uid;
     String email;
     Currency currency;
