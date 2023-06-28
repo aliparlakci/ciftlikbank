@@ -24,8 +24,8 @@ public class AccountService {
     private final TransactionPersistPort transactionPersistPort;
 
     public AccountResponse retrieveAccount(String accountUid) {
-        BigDecimal accountBalance = bookkeepingService.retrieveAccountBalance(accountUid);
         Account account = accountPersistPort.retrieveAccountByUid(accountUid);
+        BigDecimal accountBalance = bookkeepingService.retrieveAccountBalance(accountUid);
         return AccountResponse.from(account, accountBalance);
     }
 

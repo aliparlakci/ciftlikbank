@@ -1,6 +1,6 @@
 package com.parlakci.ciftlikbank.adapter.redis;
 
-import com.parlakci.ciftlikbank.application.port.TicketCachePort;
+import com.parlakci.ciftlikbank.application.port.TicketPersistPort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class TicketCacheRedisAdapter implements TicketCachePort {
+public class TicketPersistRedisAdapter implements TicketPersistPort {
     @Override
     public void saveTicket(String ticket, BigDecimal rate) {
 

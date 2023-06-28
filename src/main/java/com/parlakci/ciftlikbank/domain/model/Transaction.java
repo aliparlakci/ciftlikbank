@@ -8,7 +8,6 @@ public record Transaction(Long id,
                           String uid,
                           BigDecimal amount,
                           Account account,
-                          TransactionType transactionType,
                           String referenceUid,
                           ZonedDateTime createdAt,
                           ZonedDateTime updatedAt) implements Serializable {

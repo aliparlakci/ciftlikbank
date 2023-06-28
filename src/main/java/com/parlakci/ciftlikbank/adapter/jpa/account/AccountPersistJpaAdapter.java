@@ -17,9 +17,8 @@ public class AccountPersistJpaAdapter implements AccountPersistPort {
     private final AccountRepository accountRepository;
     private final TransactionPersistPort transactionPersistPort;
 
-    @Override
     public Account retrieveAccountByUid(String uid) {
-        return null;
+        return accountRepository.findByUid(uid).toModel();
     }
 
     @Transactional
