@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,12 +30,14 @@ public class BookkeepingService {
 
     public BigDecimal retrieveAccountBalance(String accountUid) {
         Account account = accountPersistPort.retrieveAccountByUid(accountUid);
-        AccountSnapshot lastAccountSnapshot = accountSnapshotPersistPort.retrieveLatestAccountSnapshot(account.uid());
+        Optional<AccountSnapshot> optionalLatestAccountSnapshot = accountSnapshotPersistPort.retrieveLatestAccountSnapshot(account.uid());
         Transaction latestAccountTransaction = transactionPersistPort.retrieveLatestAccountTransaction(account.uid());
 
-        return latestAccountTransaction.createdAt().isAfter(lastAccountSnapshot.createdAt())
-                ? this.takeAccountSnapshot(lastAccountSnapshot).balance()
-                : lastAccountSnapshot.balance();
+        return optionalLatestAccountSnapshot
+                .map(latestAccountSnapshot -> latestAccountTransaction.createdAt().isBefore(latestAccountSnapshot.createdAt())
+                        ? latestAccountSnapshot.balance()
+                        : this.takeAccountSnapshot(latestAccountSnapshot).balance())
+                .orElseGet(() -> this.takeAccountSnapshot(account.uid()).balance());
     }
 
     public void deposit(String accountUid, BigDecimal amount) {
@@ -45,7 +48,7 @@ public class BookkeepingService {
     public void withdraw(String accountUid, BigDecimal amount) {
         ensureNonnegative(amount);
         BigDecimal accountBalance = this.retrieveAccountBalance(accountUid);
-        if (amount.compareTo(accountBalance) < 0) {
+        if (accountBalance.compareTo(amount) < 0) {
             throw new BusinessException("Insufficient funds!");
         }
         transactionPersistPort.create(accountUid, amount.negate());
@@ -55,7 +58,7 @@ public class BookkeepingService {
     public void exchange(ExchangeVo exchangeVo, BigDecimal rate, BigDecimal depositAmount, BigDecimal withdrawAmount) {
         BigDecimal withdrawAccountBalance = this.retrieveAccountBalance(exchangeVo.getWithdrawAccountUid());
         ensureNonnegative(withdrawAccountBalance.subtract(withdrawAmount));
-        transactionPersistPort.create(exchangeVo.getWithdrawAccountUid(), withdrawAmount, exchangeVo.getUid());
+        transactionPersistPort.create(exchangeVo.getWithdrawAccountUid(), withdrawAmount.negate(), exchangeVo.getUid());
         transactionPersistPort.create(exchangeVo.getDepositAccountUid(), depositAmount, exchangeVo.getUid());
         exchangePersistPort.create(exchangeVo, rate);
     }
@@ -64,6 +67,12 @@ public class BookkeepingService {
         String accountUid = lastSnapshot.account().uid();
         List<Transaction> transactions = transactionPersistPort.retrieveTransactions(accountUid, lastSnapshot.createdAt());
         BigDecimal net = lastSnapshot.balance().add(calculateNetBalance(transactions));
+        return accountSnapshotPersistPort.newSnapshot(accountUid, net);
+    }
+
+    private AccountSnapshot takeAccountSnapshot(String accountUid) {
+        List<Transaction> transactions = transactionPersistPort.retrieveTransactions(accountUid);
+        BigDecimal net = calculateNetBalance(transactions);
         return accountSnapshotPersistPort.newSnapshot(accountUid, net);
     }
 

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,13 @@ public class AccountPersistJpaAdapter implements AccountPersistPort {
 
     private final AccountRepository accountRepository;
     private final TransactionPersistPort transactionPersistPort;
+
+    public List<Account> retrieveAccountsByCurrency(Currency currency) {
+        return accountRepository.findAllByCurrency(currency)
+                .stream()
+                .map(AccountEntity::toModel)
+                .toList();
+    }
 
     public Account retrieveAccountByUid(String uid) {
         return accountRepository.findByUid(uid).toModel();

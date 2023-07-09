@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -20,10 +21,9 @@ public class AccountSnapshotPersistJpaAdapter implements AccountSnapshotPersistP
     private final AccountRepository accountRepository;
 
     @Override
-    public AccountSnapshot retrieveLatestAccountSnapshot(String accountUid) {
+    public Optional<AccountSnapshot> retrieveLatestAccountSnapshot(String accountUid) {
         return accountSnapshotRepository.findFirstByAccount_UidOrderByIdDesc(accountUid)
-                .orElseThrow()
-                .toModel();
+                .map(AccountSnapshotEntity::toModel);
     }
 
     @Override

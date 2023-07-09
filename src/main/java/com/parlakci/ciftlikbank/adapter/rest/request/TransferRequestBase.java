@@ -11,9 +11,6 @@ import java.math.BigDecimal;
 public abstract class TransferRequestBase {
 
     @NonNull
-    private String amount;
+    private BigDecimal amount;
 
-    public BigDecimal getAmount() {
-        return new BigDecimal(this.amount);
-    }
 }

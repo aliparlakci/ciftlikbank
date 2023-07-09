@@ -8,7 +8,7 @@ create table ciftlikbank.account
     created_at  timestamp with time zone not null,
     updated_at  timestamp with time zone,
     uid         varchar                  not null,
-    owner_email integer                  not null,
+    owner_email varchar                  not null,
     currency    integer                  not null
 );
 
@@ -66,8 +66,6 @@ create table ciftlikbank.transaction
     account_id       bigint                   not null
         constraint fk_account_transaction
             references ciftlikbank.account,
-    exchange_type    varchar                  not null,
     amount           numeric                  not null,
-    transaction_type varchar                  not null,
-    reference_uid    varchar                  not null
+    reference_uid    varchar
 );

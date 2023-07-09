@@ -5,6 +5,7 @@ import com.parlakci.ciftlikbank.adapter.rest.request.DepositRequest;
 import com.parlakci.ciftlikbank.adapter.rest.request.ExchangeRequest;
 import com.parlakci.ciftlikbank.adapter.rest.request.WithdrawRequest;
 import com.parlakci.ciftlikbank.adapter.rest.response.AccountResponse;
+import com.parlakci.ciftlikbank.adapter.rest.response.AccountsResponse;
 import com.parlakci.ciftlikbank.adapter.rest.response.TicketResponse;
 import com.parlakci.ciftlikbank.application.service.*;
 import com.parlakci.ciftlikbank.domain.model.Currency;
@@ -24,6 +25,11 @@ public class RestCiftlikbankController {
     private final AccountService accountService;
     private final MoneyManager moneyManager;
     private final TicketService ticketService;
+
+    @GetMapping("/v1/accounts")
+    public AccountsResponse retrieveAccounts(@RequestParam @NotNull Currency currency) {
+        return accountService.retrieveAllAccounts(currency);
+    }
 
     @PostMapping("/v1/accounts")
     public AccountResponse createAccount(@RequestBody @NotNull AccountRequest accountRequest) {

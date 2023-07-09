@@ -2,7 +2,7 @@ package com.parlakci.ciftlikbank.application.service;
 
 import com.parlakci.ciftlikbank.application.port.AccountPersistPort;
 import com.parlakci.ciftlikbank.application.port.LockPort;
-import com.parlakci.ciftlikbank.application.port.TicketPersistPort;
+import com.parlakci.ciftlikbank.application.port.TicketCachePort;
 import com.parlakci.ciftlikbank.domain.exception.BusinessException;
 import com.parlakci.ciftlikbank.domain.model.*;
 import com.parlakci.ciftlikbank.domain.model.vo.ExchangeVo;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 public class MoneyManager {
 
     private final AccountPersistPort accountPersistPort;
-    private final TicketPersistPort ticketCachePort;
+    private final TicketCachePort ticketCachePort;
     private final BookkeepingService bookkeepingService;
     private final LockPort lockPort;
 
@@ -55,6 +56,7 @@ public class MoneyManager {
             BigDecimal depositAmount = calculateAmountInCurrency(depositCurrency, exchangeVo.getAmount(), rate);
             BigDecimal withdrawAmount = calculateAmountInCurrency(withdrawCurrency, exchangeVo.getAmount(), rate);
 
+            exchangeVo.setUid(UUID.randomUUID().toString());
             bookkeepingService.exchange(exchangeVo, depositAmount, withdrawAmount, rate);
         } finally {
             lockPort.unlock(exchangeVo.getDepositAccountUid(), exchangeVo.getWithdrawAccountUid());

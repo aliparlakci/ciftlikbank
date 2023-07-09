@@ -1,5 +1,6 @@
 package com.parlakci.ciftlikbank.adapter.rest.request;
 
+import com.parlakci.ciftlikbank.domain.model.Currency;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,5 +13,5 @@ public class AccountRequest {
     String email;
 
     @NonNull
-    Integer currency;
+    Currency currency;
 }

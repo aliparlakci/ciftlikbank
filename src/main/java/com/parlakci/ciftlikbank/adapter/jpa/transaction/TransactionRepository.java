@@ -9,5 +9,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     TransactionEntity findFirstByAccount_UidOrderByIdDesc(String accountUid);
 
+    List<TransactionEntity> findAllByAccount_UidOrderByIdDesc(String accountUid);
+
     List<TransactionEntity> findAllByAccount_UidAndCreatedAtAfterOrderByIdDesc(String accountUid, ZonedDateTime createdAt);
+
 }

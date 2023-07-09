@@ -25,6 +25,13 @@ public class TransactionPersistJpaAdapter implements TransactionPersistPort {
         return transactionRepository.findFirstByAccount_UidOrderByIdDesc(accountUid).toModel();
     }
 
+    public List<Transaction> retrieveTransactions(String accountUid) {
+        return transactionRepository.findAllByAccount_UidOrderByIdDesc(accountUid)
+                .stream()
+                .map(TransactionEntity::toModel)
+                .toList();
+    }
+
     public List<Transaction> retrieveTransactions(String accountUid, ZonedDateTime startDate) {
         return transactionRepository.findAllByAccount_UidAndCreatedAtAfterOrderByIdDesc(accountUid, startDate)
                 .stream()

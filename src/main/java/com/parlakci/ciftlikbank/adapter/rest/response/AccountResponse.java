@@ -18,6 +18,15 @@ public class AccountResponse {
     BigDecimal accountBalance;
     ZonedDateTime createdAt;
 
+    public static AccountResponse from(Account account) {
+        return AccountResponse.builder()
+                .uid(account.uid())
+                .email(account.ownerEmail())
+                .currency(account.currency())
+                .createdAt(account.createdAt())
+                .build();
+    }
+
     public static AccountResponse from(Account account, BigDecimal balance) {
         return AccountResponse.builder()
                 .uid(account.uid())

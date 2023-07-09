@@ -25,7 +25,7 @@ public class TransactionEntity extends EntityBase {
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "referenceUid")
+    @Column(name = "reference_uid")
     private String referenceUid;
 
     public Transaction toModel() {
