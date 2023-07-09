@@ -11,6 +11,7 @@ import com.parlakci.ciftlikbank.domain.model.Currency;
 import com.parlakci.ciftlikbank.domain.model.ExchangeType;
 import com.parlakci.ciftlikbank.domain.model.vo.ExchangeVo;
 import com.parlakci.ciftlikbank.domain.model.vo.TicketVo;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class RestCiftlikbankController {
 
     private final AccountService accountService;
-    private final MoneyFacade moneyFacade;
+    private final MoneyManager moneyManager;
     private final TicketService ticketService;
 
     @PostMapping("/v1/accounts")
-    public AccountResponse createAccount(@RequestBody AccountRequest accountRequest) {
+    public AccountResponse createAccount(@RequestBody @NotNull AccountRequest accountRequest) {
         return accountService.createAccount(accountRequest);
     }
 
@@ -35,25 +36,25 @@ public class RestCiftlikbankController {
     }
 
     @PostMapping("/v1/accounts/{accountUid}/deposit")
-    public void deposit(@PathVariable String accountUid, @RequestBody DepositRequest depositRequest) {
-        moneyFacade.deposit(accountUid, depositRequest.getAmount());
+    public void deposit(@PathVariable String accountUid, @RequestBody @NotNull DepositRequest depositRequest) {
+        moneyManager.deposit(accountUid, depositRequest.getAmount());
     }
 
     @PostMapping("/v1/accounts/{accountUid}/withdraw")
-    public void withdraw(@PathVariable String accountUid, @RequestBody WithdrawRequest withdrawRequest) {
-        moneyFacade.withdraw(accountUid, withdrawRequest.getAmount());
+    public void withdraw(@PathVariable String accountUid, @RequestBody @NotNull WithdrawRequest withdrawRequest) {
+        moneyManager.withdraw(accountUid, withdrawRequest.getAmount());
     }
 
     @PostMapping("/v1/buy-dollars")
     public void buyDollars(@RequestBody ExchangeRequest exchangeRequest) {
         ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.BUY_USD, exchangeRequest);
-        moneyFacade.exchange(exchangeVo, Currency.TRY, Currency.USD);
+        moneyManager.exchange(exchangeVo, Currency.TRY, Currency.USD);
     }
 
     @PostMapping("/v1/sell-dollars")
     public void sellDollars(@RequestBody ExchangeRequest exchangeRequest) {
         ExchangeVo exchangeVo = ExchangeVo.from(ExchangeType.SELL_USD, exchangeRequest);
-        moneyFacade.exchange(exchangeVo, Currency.USD, Currency.TRY);
+        moneyManager.exchange(exchangeVo, Currency.USD, Currency.TRY);
     }
 
     @PostMapping("/v1/exchange/ticket")

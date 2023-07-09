@@ -10,6 +10,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TicketPersistRedisAdapter implements TicketPersistPort {
+
     @Override
     public void saveTicket(String ticket, BigDecimal rate) {
 

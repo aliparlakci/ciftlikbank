@@ -1,6 +1,6 @@
 package com.parlakci.ciftlikbank.application.service;
 
-import com.parlakci.ciftlikbank.application.port.RateService;
+import com.parlakci.ciftlikbank.application.port.RatePort;
 import com.parlakci.ciftlikbank.application.port.TicketPersistPort;
 import com.parlakci.ciftlikbank.domain.model.vo.TicketVo;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class TicketService {
 
     private final TicketPersistPort ticketPersistPort;
-    private final RateService rateService;
+    private final RatePort ratePort;
 
     public TicketVo requestTicket() {
         BigDecimal rate = requestNewRate();
@@ -27,7 +27,7 @@ public class TicketService {
     }
 
     private BigDecimal requestNewRate() {
-        String usdTryRate = rateService.getRates().getConversionRates().getTRY();
+        String usdTryRate = ratePort.getRates().getConversionRates().getTRY();
         return new BigDecimal(usdTryRate);
     }
 }

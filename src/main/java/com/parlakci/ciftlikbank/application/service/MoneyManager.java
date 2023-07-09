@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MoneyFacade {
+public class MoneyManager {
 
     private final AccountPersistPort accountPersistPort;
     private final TicketPersistPort ticketCachePort;
